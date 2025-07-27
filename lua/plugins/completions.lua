@@ -1,6 +1,7 @@
 return {
     {
         "L3MON4D3/LuaSnip",
+        build = "make install_jsregexp",
         dependencies = { "saadparwaiz1/cmp_luasnip", "rafamadriz/friendly-snippets" },
     },
     { "hrsh7th/cmp-nvim-lsp" },
@@ -14,7 +15,6 @@ return {
             cmp.setup({
 
                 snippet = {
-                    -- REQUIRED - you must specify a snippet engine
                     expand = function(args)
                         require("luasnip").lsp_expand(args.body)
                     end,
@@ -33,6 +33,7 @@ return {
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
+                    { name = "codeium" },
                 }, {
                     { name = "buffer" },
                 }),
