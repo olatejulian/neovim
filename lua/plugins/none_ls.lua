@@ -9,6 +9,8 @@ return {
                 none_ls.builtins.formatting.prettier,
                 none_ls.builtins.formatting.stylua,
                 require("none-ls.diagnostics.eslint"),
+                require("none-ls.diagnostics.ruff"),
+                require("none-ls.formatting.ruff"),
                 require("none-ls-luacheck.diagnostics.luacheck"),
             },
         })
