@@ -1,5 +1,6 @@
 vim.cmd(
--- "colorscheme catppuccin"
--- "colorscheme nord"
-    "colorscheme rose-pine"
+    -- "colorscheme catppuccin"
+    "colorscheme dracula"
+    -- "colorscheme nord"
+    -- "colorscheme rose-pine"
 )
