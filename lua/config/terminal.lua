@@ -30,11 +30,14 @@ local function toggle_term()
     vim.cmd("startinsert")
 end
 
-vim.keymap.set("n", "<C-j>", toggle_term, { noremap = true, silent = true, desc = "Toggle terminal (open/kill)" })
+vim.keymap.set("n", "<C-j>", toggle_term, {
+    noremap = true,
+    silent = true,
+    desc = "Toggle terminal (open/kill)",
+})
 
-vim.keymap.set(
-    "t",
-    "<Esc><Esc>",
-    "<C-\\><C-n><C-w>p",
-    { noremap = true, silent = true, desc = "Exit terminal mode and go to previous window" }
-)
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n><C-w>p", {
+    noremap = true,
+    silent = true,
+    desc = "Exit terminal mode and go to previous window",
+})
