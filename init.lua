@@ -1,6 +1,2 @@
-require("config.globals")
-require("config.lazy")
-require("config.colorscheme")
-require("config.keymaps")
-require("config.options")
-require("config.terminal")
+require("config")
+
