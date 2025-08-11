@@ -6,6 +6,8 @@ return {
         none_ls.setup({
             sources = {
                 none_ls.builtins.diagnostics.mypy,
+                none_ls.builtins.diagnostics.textidote,
+                none_ls.builtins.formatting.latexindent,
                 none_ls.builtins.formatting.prettier,
                 none_ls.builtins.formatting.stylua,
                 require("none-ls.diagnostics.eslint"),
@@ -20,5 +22,5 @@ return {
     dependencies = {
         "nvimtools/none-ls-extras.nvim",
         "gbprod/none-ls-luacheck.nvim",
-    }
+    },
 }
