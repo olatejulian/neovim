@@ -24,8 +24,8 @@ return {
             dapui.close()
         end
 
-        vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, {})
-        vim.keymap.set("n", "<leader>dc", dap.continue, {})
+        vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "[D]ebug [B]reakpoint" })
+        vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "[D]ebug [C]ontinue" })
     end,
     dependencies = {
         { "rcarriga/nvim-dap-ui",        dependencies = { "nvim-neotest/nvim-nio" } },
