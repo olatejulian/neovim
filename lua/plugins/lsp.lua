@@ -28,6 +28,19 @@ local nvim_lspconfig = {
 
         local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+        -- Hypr LSP setup
+        vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
+            pattern = { "*.hl", "hypr*.conf" },
+            callback = function(event)
+                print(string.format("starting hyprls for %s", vim.inspect(event)))
+                vim.lsp.start {
+                    name = "hyprlang",
+                    cmd = { "hyprls" },
+                    root_dir = vim.fn.getcwd(),
+                }
+            end
+        })
+
         -- Latex/Tex LSP setup
         lspconfig.texlab.setup({
             capabilities = capabilities,
@@ -69,6 +82,9 @@ local nvim_lspconfig = {
         })
 
         vim.lsp.enable("ruff")
+
+        -- Shelscript LSP setup
+        require('lspconfig').bashls.setup({})
 
         -- Typescript LSP setup
         lspconfig.ts_ls.setup({
