@@ -1,5 +1,6 @@
 -- delete a entire word
 vim.keymap.set("i", "<C-BS>", "<C-w>", { noremap = true, silent = true })
+vim.keymap.set("i", "<C-H>", "<C-w>", { noremap = true, silent = true })
 
 -- move lines
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
