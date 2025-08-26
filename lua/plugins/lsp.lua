@@ -31,7 +31,7 @@ local nvim_lspconfig = {
         -- Hypr LSP setup
         vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
             pattern = { "*.hl", "hypr*.conf" },
-            callback = function(event)
+            callback = function(_)
                 vim.lsp.start {
                     name = "hyprlang",
                     cmd = { "hyprls" },
@@ -88,6 +88,10 @@ local nvim_lspconfig = {
         -- Typescript LSP setup
         lspconfig.ts_ls.setup({
             capabilities = capabilities,
+            on_attach = function(client, _)
+                client.server_capabilities.documentFormattingProvider = false
+            end
+
         })
 
         -- LSP Keymaps
