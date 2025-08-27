@@ -23,21 +23,24 @@ local mason_lspconfig = {
 
 local nvim_lspconfig = {
     "neovim/nvim-lspconfig",
+    opts = {
+        inlay_hints = { enable = true },
+    },
     config = function()
         local lspconfig = require("lspconfig")
 
         local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
         -- Hypr LSP setup
-        vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
+        vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
             pattern = { "*.hl", "hypr*.conf" },
             callback = function(_)
-                vim.lsp.start {
+                vim.lsp.start({
                     name = "hyprlang",
                     cmd = { "hyprls" },
                     root_dir = vim.fn.getcwd(),
-                }
-            end
+                })
+            end,
         })
 
         -- Latex/Tex LSP setup
@@ -83,22 +86,27 @@ local nvim_lspconfig = {
         vim.lsp.enable("ruff")
 
         -- Shelscript LSP setup
-        require('lspconfig').bashls.setup({})
+        require("lspconfig").bashls.setup({})
 
         -- Typescript LSP setup
         lspconfig.ts_ls.setup({
             capabilities = capabilities,
             on_attach = function(client, _)
                 client.server_capabilities.documentFormattingProvider = false
-            end
-
+            end,
         })
 
         -- LSP Keymaps
         vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, { desc = "LSP Rename Symbol" })
         vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-        vim.keymap.set({ "n", "v" }, "<C-.>", vim.lsp.buf.code_action, {})
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "[G]o to [D]efinition" })
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "[G]o to [D]eclaration" })
+        vim.keymap.set(
+            { "n", "v" },
+            "<leader>ca",
+            vim.lsp.buf.code_action,
+            { desc = "[C]ode [A]ction" }
+        )
     end,
     lazy = false,
 }
