@@ -16,7 +16,7 @@ function bootstrap()
         if vim.v.shell_error ~= 0 then
             vim.api.nvim_echo({
                 { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-                { out,                            "WarningMsg" },
+                { out, "WarningMsg" },
                 { "\nPress any key to exit..." },
             }, true, {})
 
@@ -31,16 +31,11 @@ end
 
 bootstrap()
 
-local setup = {
+require("lazy").setup({
     spec = {
-        {
-            import = "plugins",
-        },
+        { import = "plugins" },
     },
     checker = {
         enabled = true,
     },
-}
-
-require("lazy").setup(setup)
-
+})
