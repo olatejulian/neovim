@@ -27,6 +27,17 @@ local nvim_lspconfig = {
         inlay_hints = { enable = true },
     },
     config = function()
+        vim.diagnostic.config({
+            virtual_text = {
+                prefix = "●", -- could be "■", "▎", "x"
+                spacing = 4,
+            },
+            signs = true,
+            underline = true,
+            update_in_insert = false,
+            severity_sort = true,
+        })
+
         local lspconfig = require("lspconfig")
 
         local capabilities = require("cmp_nvim_lsp").default_capabilities()
