@@ -25,6 +25,7 @@ vim.cmd(
 
 -- Keymaps
 vim.keymap.set("n", "<leader>w", ":w<CR>", { noremap = true, desc = "[W]rite current file" })
+vim.keymap.set("n", "<leader>q", ":bd<CR>", { noremap = true, desc = "[Q]uit current buffer" })
 
 -- delete a entire word
 vim.keymap.set("i", "<C-BS>", "<C-w>", { noremap = true, silent = true })
