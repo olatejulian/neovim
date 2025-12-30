@@ -1,3 +1,4 @@
+-- plugin specs remain largely the same for mason / mason-lspconfig
 local mason = {
     "mason-org/mason.nvim",
     config = function()
@@ -11,6 +12,7 @@ local mason_lspconfig = {
     config = function()
         require("mason-lspconfig").setup({
             ensure_installed = { "lua_ls", "ts_ls" },
+            automatic_installation = true, -- optional: adapt if “auto_install” key changed
         })
     end,
     dependencies = {
@@ -18,7 +20,7 @@ local mason_lspconfig = {
         "neovim/nvim-lspconfig",
     },
     lazy = false,
-    opts = { auto_install = true },
+    -- The opts field may be dropped or adapted if plugin supports it
 }
 
 local nvim_lspconfig = {
@@ -27,9 +29,10 @@ local nvim_lspconfig = {
         inlay_hints = { enable = true },
     },
     config = function()
+        -- Diagnostics config
         vim.diagnostic.config({
             virtual_text = {
-                prefix = "●", -- could be "■", "▎", "x"
+                prefix = "●",
                 spacing = 4,
             },
             signs = true,
@@ -38,86 +41,66 @@ local nvim_lspconfig = {
             severity_sort = true,
         })
 
-        local lspconfig = require("lspconfig")
-
-        local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-        -- Hypr LSP setup
-        vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-            pattern = { "*.hl", "hypr*.conf" },
-            callback = function(_)
-                vim.lsp.start({
-                    name = "hyprlang",
-                    cmd = { "hyprls" },
-                    root_dir = vim.fn.getcwd(),
-                })
+        -- Keymaps - now using LspAttach to make them buffer-local after attach
+        vim.api.nvim_create_autocmd("LspAttach", {
+            callback = function(ev)
+                local bufnr = ev.buf
+                local opts = { buffer = bufnr }
+                -- rename
+                vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
+                -- hover
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                -- definition/declaration
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+                -- code action
+                vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
             end,
         })
 
-        -- Latex/Tex LSP setup
-        lspconfig.texlab.setup({
-            capabilities = capabilities,
+        -- Optionally set up any global defaults via vim.lsp.config('*', {...})
+        vim.lsp.config("*", {
+            capabilities = require("cmp_nvim_lsp").default_capabilities(),
+        })
+
+        -- Then **customise** individual servers
+        vim.lsp.config("lua_ls", {
+            -- merge defaults with your specifics
+            -- e.g., settings = { Lua = { /*…*/ } }
+        })
+        vim.lsp.enable("lua_ls")
+
+        vim.lsp.config("pyright", {
             settings = {
-                texlab = {
-                    lint = { chktex = { onOpenAndSave = true } },
-                    format = { executable = "latexindent", args = {} },
-                },
+                pyright = { disableOrganizeImports = true },
+                python = { analysis = { typeCheckingMode = "off" } },
             },
         })
+        vim.lsp.enable("pyright")
 
-        -- Lua LSP setup
-        lspconfig.lua_ls.setup({
-            capabilities = capabilities,
-        })
-
-        -- Python LSP setup
-        lspconfig.pyright.setup({
-            capabilities = capabilities,
-            settings = {
-                pyright = {
-                    disableOrganizeImports = true,
-                },
-                python = {
-                    analysis = {
-                        typeCheckingMode = "off",
-                    },
-                },
-            },
-        })
-
-        lspconfig.ruff.setup({
-            capabilities = capabilities,
+        vim.lsp.config("ruff", {
             init_options = {
                 settings = {
                     format = { preview = true },
                 },
             },
         })
-
         vim.lsp.enable("ruff")
 
-        -- Shelscript LSP setup
-        require("lspconfig").bashls.setup({})
+        vim.lsp.enable("bashls")
+        vim.lsp.enable("ts_ls")
 
-        -- Typescript LSP setup
-        lspconfig.ts_ls.setup({
-            capabilities = capabilities,
-            on_attach = function(client, _)
-                client.server_capabilities.documentFormattingProvider = false
+        -- For custom/hypr LSP server (not part of nvim-lspconfig predefs)
+        vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+            pattern = { "*.hl", "hypr*.conf" },
+            callback = function(_)
+                vim.lsp.start({
+                    name = "hyprlang",
+                    cmd = { "hyprls" },
+                    root_dir = vim.loop.cwd(), -- prefer vim.loop.cwd() over vim.fn.getcwd()
+                })
             end,
         })
-
-        -- LSP Keymaps
-        vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, { desc = "LSP Rename Symbol" })
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "[G]o to [D]efinition" })
-        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "[G]o to [D]eclaration" })
-        vim.keymap.set(
-            { "n", "v" },
-            "<leader>ca",
-            vim.lsp.buf.code_action,
-            { desc = "[C]ode [A]ction" }
-        )
     end,
     lazy = false,
 }
