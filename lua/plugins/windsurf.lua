@@ -1,10 +1,5 @@
-return {
-    "Exafunction/windsurf.nvim",
-    dependencies = {
-        "nvim-lua/plenary.nvim",
-        "hrsh7th/nvim-cmp",
-    },
-    config = function()
-        require("codeium").setup({})
-    end,
-}
+local add = MiniDeps.add
+
+add("Exafunction/windsurf.nvim")
+
+require("codeium").setup()

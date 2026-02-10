@@ -1,7 +1,3 @@
-return {
-    "lervag/vimtex",
-    lazy = false,
-    init = function()
-        vim.g.vimtex_view_method = "zathura"
-    end,
-}
+local add = MiniDeps.add
+
+add("lervag/vimtex")
